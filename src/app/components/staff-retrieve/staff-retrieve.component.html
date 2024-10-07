@@ -1,0 +1,139 @@
+<div class="container mt-5">
+  <h2>Staff Retrieval</h2>
+  <div class="mb-4">
+    <button routerLink="/register" class="btn btn-success">
+      <i class="fa fa-plus"></i> Add New Staff
+    </button>
+  </div>
+
+  <div
+    *ngIf="message"
+    class="alert"
+    [ngClass]="{ 'alert-success': success, 'alert-danger': !success }"
+    role="alert"
+  >
+    {{ message }}
+  </div>
+
+  <div class="form-group mb-4">
+    <label for="employeeNumber">Search by Employee Number:</label>
+    <input
+      type="text"
+      id="employeeNumber"
+      class="form-control"
+      [(ngModel)]="employeeNumber"
+      (keyup.enter)="searchStaff()"
+      placeholder="Enter Employee Number"
+    />
+  </div>
+
+  <button (click)="searchStaff()" class="btn btn-primary mb-4">Search</button>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Surname</th>
+        <th>Other Names</th>
+        <th>Date of Birth</th>
+        <th class="text-center">ID Photo</th>
+        <th>Employee ID</th>
+        <th class="text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let staff of staffMembers">
+        <td>{{ staff.surname }}</td>
+        <td>{{ staff.otherNames }}</td>
+        <td>{{ staff.dob | date }}</td>
+        <td class="text-center">
+          <img
+            *ngIf="staff.idPhoto"
+            [src]="staff.idPhoto"
+            alt="ID Photo"
+            width="100"
+            height="100"
+            class="id-photo"
+          />
+        </td>
+        <td>{{ staff.employeeNumber }}</td>
+        <td class="text-center pt-4">
+          <button
+            (click)="openEditModal(staff)"
+            class="btn btn-primary btn-sm"
+            title="Edit"
+          >
+            <i class="fa fa-edit fa-xs"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Edit Staff Modal -->
+  <div
+    class="modal fade"
+    id="editStaffModal"
+    tabindex="-1"
+    aria-labelledby="editStaffModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editStaffModalLabel">
+            Edit Staff Details
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="dob">Date of Birth:</label>
+              <input
+                type="date"
+                id="dob"
+                class="form-control"
+                [(ngModel)]="selectedStaff.dob"
+                name="dob"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="idPhoto">ID Photo:</label>
+              <input
+                type="file"
+                (change)="onFileChange($event)"
+                class="form-control"
+                id="idPhoto"
+              />
+            </div>
+          </form>
+          <div
+            *ngIf="message"
+            class="alert"
+            [ngClass]="{ 'alert-success': success, 'alert-danger': !success }"
+          >
+            {{ message }}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="button" class="btn btn-primary" (click)="updateStaff()">
+            Save changes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
